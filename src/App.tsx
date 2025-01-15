@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./App.css";
 
+interface CaptionResponse {
+  caption?: string;
+}
+
 const App: React.FC = () => {
   const [image, setImage] = useState<File | null>(null);
   const [caption, setCaption] = useState<string>("");
@@ -29,11 +33,13 @@ const App: React.FC = () => {
         "https://b9df3515-d8f3-432f-88eb-390f647756b9-00-2zu05yv8r6vcx.sisko.replit.dev/caption",
         formData
       );
-      const responseData: { caption?: unknown } = response.data;
-      if (typeof responseData.caption === 'string') {
+
+      const responseData = response.data as CaptionResponse;
+
+      if (responseData && typeof responseData.caption === "string") {
         setCaption(responseData.caption);
       } else {
-        console.error('Caption is not a string:', responseData.caption);
+        console.error("Caption is not a string:", responseData?.caption);
       }
     } catch (error) {
       console.error("Error generating caption:", error.response || error.message);

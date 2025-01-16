@@ -42,7 +42,11 @@ const App: React.FC = () => {
         console.error("Caption is not a string:", responseData?.caption);
       }
     } catch (error) {
-      console.error("Error generating caption:", error.response || error.message);
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error:", error.response?.data || error.message);
+      } else {
+        console.error("Unexpected error:", error);
+      }
       alert("Failed to generate caption. Please try again.");
     } finally {
       setLoading(false);
